@@ -1,0 +1,72 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.egg-info/
+*.egg
+dist/
+build/
+develop-eggs/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+wheels/
+share/python-wheels/
+pip-wheel-metadata/
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Django specific files
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# ENV files (keep your environment variables secret!)
+.env
+.env.*
+
+# Pytest cache and Django migration files
+.pytest_cache/
+migrations/
+*.log
+
+# Django collectstatic
+staticfiles/
+media/
+static/
+
+# Docker specific files
+docker-compose.override.yml
+docker-compose.local.yml
+docker-compose.prod.yml
+.env.docker
