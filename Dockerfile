@@ -1,10 +1,8 @@
-# Use a specific Python runtime version as a parent image
-FROM python:3.11-slim
+# First stage: Build stage
+FROM python:3.11-slim AS builder
 
-# Set environment variables
-# To remove .pyc file cause it's not necessary for containers which will reduce the size of container
+# Set environment variables for the build stage
 ENV PYTHONDONTWRITEBYTECODE=1
-# This disables output buffering in Python, which makes sure that logs are immediately visible in the Docker logs
 ENV PYTHONUNBUFFERED=1
 
 # Set the working directory
@@ -16,9 +14,27 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Copy only the requirements file to leverage Docker cache
+COPY requirements.txt .
+
 # Install Python dependencies
-COPY requirements.txt /app/
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install --prefix=/install -r requirements.txt
+
+# Second stage: Final runtime stage
+FROM python:3.11-slim AS runtime
+
+# Set environment variables for the runtime stage
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Set the working directory
+WORKDIR /app
+
+# Copy installed packages from the builder stage
+COPY --from=builder /install /usr/local
 
 # Copy the project code into the container
 COPY . /app/
+
+# Command to run your application (modify as needed)
+CMD ["python", "app.py"]
