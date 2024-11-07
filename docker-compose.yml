@@ -1,11 +1,12 @@
 services:
-  be:
+  backend:
     build: .
     command: gunicorn --workers 3 --bind 0.0.0.0:8000 resume_checker.wsgi:application
+    restart: always
     volumes:
       - .:/app
     env_file:
-      - .env  # This will ensure the .env file is loaded
+      - .env  # This ensures the .env file is loaded
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONUNBUFFERED=1
@@ -26,13 +27,24 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
 
   nginx:
-    image: nginx:latest
+    image: nginx:alpine
+    restart: unless-stopped
     ports:
-      - "8080:80"
+      - "80:80"
+      - "443:443"
     volumes:
-      - ./nginx/conf/:/etc/nginx/conf.d/:ro
+      - /var/www/static/:/var/www/static/
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
     depends_on:
-      - be
+      - backend
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - /var/certbot/conf:/etc/letsencrypt/:rw
+      - /var/certbot/www/:/var/www/certbot/:rw
+    depends_on:
+      - nginx
 
 volumes:
   postgres_data:
