@@ -9,19 +9,20 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # Install system dependencies for Python build
-RUN apt-get update && apt-get install -y \
+# Using a single RUN command to reduce layers and optimize build time
+# Adding no-install-recommends to avoid unnecessary packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy only the requirements file to leverage Docker cache
 COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install --upgrade pip && pip install --prefix=/install -r requirements.txt
-
-
-
+# Combining pip install commands to reduce layers
+# Using --no-cache-dir to avoid storing unnecessary files
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # Second stage: Final runtime stage
 FROM python:3.11-slim AS runtime
@@ -34,10 +35,10 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # Copy installed packages from the builder stage
-COPY --from=builder /install /usr/local
+COPY --from=builder /usr/local /usr/local
 
 # Copy the project code into the container
 COPY . /app/
 
-# Command to run your application (modify as needed)
-CMD ["python", "app.py"]
+# Command to run the Django application using Gunicorn
+CMD ["gunicorn", "--workers", "3", "--bind", "0.0.0.0:8000", "resume_checker.wsgi:application"]

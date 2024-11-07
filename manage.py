@@ -5,7 +5,7 @@ import sys
 
 
 def main():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'resume_checker.settings.development')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'resume_checker.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
