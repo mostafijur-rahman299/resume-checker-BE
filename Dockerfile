@@ -40,5 +40,3 @@ COPY --from=builder /usr/local /usr/local
 # Copy the project code into the container
 COPY . /app/
 
-# Command to run the Django application using Gunicorn
-CMD ["gunicorn", "--workers", "3", "--bind", "0.0.0.0:8000", "resume_checker.wsgi:application"]
