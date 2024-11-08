@@ -33,8 +33,7 @@ services:
       - "8080:80"
       - "443:443"
     volumes:
-      - /var/www/static/:/var/www/static/
-      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - backend
 
