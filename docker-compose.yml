@@ -29,8 +29,8 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
 
   nginx:
-    restart: always
     image: nginx:alpine
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
