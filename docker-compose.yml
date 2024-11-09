@@ -38,7 +38,7 @@ services:
       - /var/www/static/:/var/www/static/
       - ./nginx/conf.d/:/etc/nginx/conf.d/
     depends_on:
-      - backend
+      - web
 
   certbot:
     image: certbot/certbot:latest
