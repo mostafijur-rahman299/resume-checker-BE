@@ -1,7 +1,7 @@
 services:
   web:
     build: .
-    command: gunicorn resume_checker.wsgi:application --bind 0.0.0.0:8001
+    command: gunicorn --config gunicorn_config.py resume_checker.wsgi:application
     restart: always
     volumes:
       - .:/app
