@@ -6,7 +6,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['resumechecker-be.mostafijur.xyz']
+ALLOWED_HOSTS = ['resumechecker-be.mostafijur.xyz', '103.191.50.57']
 
 DATABASES = {
     'default': {
