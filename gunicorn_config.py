@@ -1,4 +1,4 @@
-bind = "0.0.0.0:8001"
+bind = "0.0.0.0:8000"
 module = "resume_checker.wsgi:application"
 
 workers = 4  # Adjust based on your server's resources
