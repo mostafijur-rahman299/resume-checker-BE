@@ -28,19 +28,6 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
 
-  nginx:
-    restart: always
-    image: nginx:alpine
-    ports:
-      - 8080:80
-      - 443:443
-    volumes:
-      - ./nginx/conf/:/etc/nginx/conf.d/:ro
-      - static_files:/app/resume_checker/staticfiles/
-      - media_files:/app/resume_checker/media/
-    depends_on:
-      - web
-
 volumes:
   postgres_data:
   static_files:  # Corrected volume name for static files
