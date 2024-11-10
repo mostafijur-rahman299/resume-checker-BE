@@ -1,17 +1,19 @@
 services:
   web:
     build: .
-    command:  bash -c "gunicorn resume_checker.wsgi:application --bind 0.0.0.0:8001 --reload --timeout 120 --workers 3"
+    command: bash -c "gunicorn resume_checker.wsgi:application --bind 0.0.0.0:8001 --reload --timeout 120 --workers 3"
     restart: always
     volumes:
-      - .:/resume_checker
+      - .:/app
+      - static_files:/app/resume_checker/staticfiles
+      - media_files:/app/resume_checker/media
     env_file:
-      - .env  # This ensures the .env file is loaded
+      - .env
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONUNBUFFERED=1
     ports:
-      - "8001:8001"  # Corrected port mapping to match internal gunicorn port
+      - "8001:8001"
     depends_on:
       - db
 
@@ -26,5 +28,28 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
 
+  nginx:
+    restart: always
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf:/etc/nginx/conf.d:ro
+      - ./certbot/www:/var/www/certbot:ro
+      - ./certbot/conf:/etc/nginx/ssl:ro
+      - static_files:/app/resume_checker/staticfiles
+      - media_files:/app/resume_checker/media
+    depends_on:
+      - web
+  
+  certbot:
+    image: certbot/certbot
+    volumes: 
+      - ./certbot/www:/var/www/certbot:rw
+      - ./certbot/conf:/etc/letsencrypt:rw
+
 volumes:
   postgres_data:
+  static_files:
+  media_files:
