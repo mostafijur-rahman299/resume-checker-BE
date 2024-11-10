@@ -5,7 +5,7 @@ services:
     restart: always
     volumes:
       - .:/app
-      - static_volume:/app/resume_checker/staticfiles/
+      - static_files:/app/resume_checker/staticfiles/
       - media_files:/app/resume_checker/media/
     env_file:
       - .env  # This ensures the .env file is loaded
@@ -30,5 +30,5 @@ services:
 
 volumes:
   postgres_data:
-  static_volume:
+  static_files:  # Corrected volume name for static files
   media_files:
