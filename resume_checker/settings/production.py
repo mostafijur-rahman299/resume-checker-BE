@@ -19,6 +19,4 @@ DATABASES = {
     }
 }
 
-CSRF_TRUSTED_ORIGINS = ['https://resumechecker-be.mostafijur.xyz']
-
 
