@@ -6,7 +6,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['resumechecker-be.mostafijur.xyz', '103.191.50.57']
+ALLOWED_HOSTS = ['resumechecker-be.mostafijur.xyz', '103.191.50.57', 'localhost']
 
 DATABASES = {
     'default': {
@@ -18,4 +18,7 @@ DATABASES = {
         'PORT': env('POSTGRES_PORT'),
     }
 }
+
+CSRF_TRUSTED_ORIGINS = ['https://resumechecker-be.mostafijur.xyz']
+
 
