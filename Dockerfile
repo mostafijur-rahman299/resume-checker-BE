@@ -24,6 +24,9 @@ COPY requirements.txt .
 # Using --no-cache-dir to avoid storing unnecessary files
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
+# Download the spaCy model after installing spaCy
+RUN python -m spacy download en_core_web_sm
+
 # Second stage: Final runtime stage
 FROM python:3.11-slim AS runtime
 

@@ -1,11 +1,13 @@
 import fitz  # PyMuPDF
 import tempfile
 import os
+import spacy
 from docx import Document
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework import status
+from resume.resume_parser import ResumeParser
 
 
 class ResumeUploadView(APIView):
@@ -36,6 +38,17 @@ class ResumeUploadView(APIView):
             if os.path.exists(file_path):
                 os.remove(file_path)
 
+    def process_text(self, text):
+        # Create the ResumeParser instance
+        parser = ResumeParser()
+
+        # Process the text to get a spaCy doc object
+        doc = parser.process_text(text)
+
+        # Extract structured data
+        return parser.extract_data(doc)
+
+
     def post(self, request):
         file = request.FILES.get('file')
 
@@ -56,4 +69,6 @@ class ResumeUploadView(APIView):
         if not success:
             return Response({'error': response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-        return Response({'extracted_text': response}, status=status.HTTP_200_OK)        
+        resume_data = self.process_text(response)
+
+        return Response({'extracted_text': resume_data}, status=status.HTTP_200_OK)        
